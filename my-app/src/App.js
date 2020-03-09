@@ -1,26 +1,53 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
+import Header from './components/header';
+import Input from './components/input';
+import todoItem from './components/todoItem';
 
-function App() {
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      todos: [
+          {id: 0, text: "make dinner tonight!"},
+          {id: 1, text: "Fold the laundry."},
+          {id: 2, text: "Learn to make a React app"},
+      ],
+      nextId: 3
+    }
+    this.addTodo = this.addTodo.bind(this);
+    this.removeTodo = this.removeTodo.bind(this);
+  }
+
+addTodo(todoText) {
+  let todos =this.state.todos.slice();
+  todos.push({id: this.state.nextId, text: todoText});
+  this.setState({
+    todos: todos,
+    nextId: ++this.state.nextId
+  });
+}  
+removeTodo(id){
+  console.log("removing: ", id );
+}
+render() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+        <div className="todo-wrapper">
+           <Header />
+           <Input todoText="" addTodo={this.addTodo}/>
+           <ul>
+        {
+          this.state.todos.map((todo)=> {
+            return <todoItem todo={todo} key={todo.id} id={todo.id} removeTodo={this.removeTodo} />
+          })
+        }
+
+           </ul>
+        </div>
     </div>
-  );
+    );
+  }
 }
 
 export default App;
